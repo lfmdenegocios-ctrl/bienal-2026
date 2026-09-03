@@ -268,6 +268,67 @@ img{display:block;max-width:100%}
 }
 .bemvindo-passo b{color:var(--tinta);font-weight:600}
 
+.chamada-retro{
+  display:flex;align-items:center;gap:13px;width:calc(100% - 32px);margin:14px 16px 0;padding:14px 16px;
+  border-radius:var(--r-md);text-align:left;
+  background:linear-gradient(120deg,rgba(255,61,113,.2),rgba(196,107,255,.12));
+  border:1px solid var(--borda-2);transition:transform .16s var(--e-out);
+}
+.chamada-retro:active{transform:scale(.985)}
+.chamada-retro .brilho{font-size:24px;line-height:1;flex:none}
+.chamada-retro .col{flex:1;min-width:0}
+.chamada-retro b{display:block;font-family:var(--fonte-display);font-size:16.5px;font-weight:600}
+.chamada-retro .col span{font-size:12.5px;color:var(--tinta-2)}
+.chamada-retro svg{flex:none;color:var(--tinta-3)}
+
+/* ---------- retrospectiva ---------- */
+.retro-capa{
+  padding:38px 22px 34px;text-align:center;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,61,113,.28),rgba(196,107,255,.14) 60%,transparent);
+  border-bottom:1px solid var(--borda);
+}
+.retro-capa::after{
+  content:"";position:absolute;inset:auto auto -70px 50%;transform:translateX(-50%);
+  width:280px;height:180px;border-radius:50%;filter:blur(10px);
+  background:radial-gradient(circle,rgba(255,61,113,.45),transparent 68%);pointer-events:none;
+}
+.retro-capa > *{position:relative}
+.retro-emoji{font-size:52px;line-height:1;display:block;margin-bottom:14px}
+.retro-capa h2{
+  margin:0;font-family:var(--fonte-display);font-weight:900;font-size:clamp(26px,8vw,34px);
+  line-height:1.08;letter-spacing:-.035em;text-wrap:balance;
+}
+.retro-capa p{margin:12px 0 0;font-size:12px;color:var(--tinta-3);line-height:1.5}
+.retro-cartao{
+  margin:14px 16px;padding:20px;border-radius:var(--r-lg);
+  background:var(--vidro);border:1px solid var(--borda);box-shadow:var(--sombra);
+}
+.retro-cartao.destaque{background:var(--grad-suave);border-color:var(--borda-2)}
+.retro-cartao.ouro{
+  background:linear-gradient(135deg,rgba(255,194,77,.15),rgba(255,138,61,.06));
+  border-color:rgba(255,194,77,.3);
+}
+.retro-rotulo{
+  display:block;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tinta-3);margin-bottom:10px;
+}
+.retro-cartao h3{margin:0;font-family:var(--fonte-display);font-size:21px;font-weight:700;line-height:1.18;letter-spacing:-.02em;overflow-wrap:anywhere}
+.retro-texto{margin:6px 0 0;font-size:13.5px;color:var(--tinta-2);line-height:1.5;overflow-wrap:anywhere}
+.retro-numeros{display:flex;gap:22px;flex-wrap:wrap}
+.retro-numeros b{
+  display:block;font-family:var(--fonte-display);font-weight:900;font-size:36px;line-height:1;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.retro-cartao.ouro .retro-numeros b{background:linear-gradient(135deg,#FFC24D,#FF8A3D);-webkit-background-clip:text;background-clip:text}
+.retro-numeros span{display:block;margin-top:5px;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-3);font-weight:700}
+.retro-espaco{display:flex;align-items:center;gap:13px}
+.retro-espaco img{width:52px;height:52px;object-fit:contain;flex:none}
+.retro-caras{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0 4px}
+.retro-caras .retrato{width:44px;height:44px;padding:1.5px;box-shadow:none}
+.retro-pe{padding:8px 16px 28px}
+.retro-pe .btn{width:100%}
+
 /* ---------- lista ---------- */
 .resumo{padding:4px 16px 8px;font-size:12.5px;color:var(--tinta-3);display:flex;gap:10px;align-items:center}
 .resumo .agora-link{margin-left:auto;color:var(--rosa);font-weight:600}
@@ -910,6 +971,14 @@ body.tela-cheia-aberta .veu{opacity:0;pointer-events:none}
   </div>
 </div>
 
+<div class="folha tela-cheia" id="folha-retro" role="dialog" aria-modal="true" aria-labelledby="retro-cab">
+  <div class="folha-topo">
+    <h2 id="retro-cab">Minha Bienal</h2>
+    <button class="fechar" data-fecha aria-label="Fechar"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="folha-corpo" id="retro-corpo" style="padding:0"></div>
+</div>
+
 <div class="folha" id="folha-bemvindo" role="dialog" aria-modal="true" aria-labelledby="bv-cab">
   <div class="puxador"></div>
   <div class="folha-topo">
@@ -1352,6 +1421,11 @@ function renderDiario() {
       <div><b>${nCarimbos}</b><span>${nCarimbos === 1 ? 'carimbo' : 'carimbos'}</span></div>
       <div><b>${dados.l.length}</b><span>${dados.l.length === 1 ? 'livro' : 'livros'}</span></div>
     </div>
+    <button class="chamada-retro" data-abre-retro>
+      <span class="brilho">✨</span>
+      <span class="col"><b>Minha Bienal</b><span>Seu resumo da feira, pronto para mostrar</span></span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </button>
     <div class="segmentado" role="tablist">
       <button role="tab" data-vd="passaporte" aria-selected="${st.vistaDiario === 'passaporte'}">Passaporte</button>
       <button role="tab" data-vd="quero" aria-selected="${st.vistaDiario === 'quero'}">Quero ir (${quero.length})</button>
@@ -1677,6 +1751,160 @@ function blocoNota(chave) {
     <textarea class="campo" id="recado" data-k="${chave}" rows="2" maxlength="500"
       placeholder="O que você achou? Alguma frase que ficou?">${esc(m.c || '')}</textarea>
   </div>`;
+}
+
+/* ---------- retrospectiva ---------- */
+/** Junta o que ele registrou de verdade. Nada aqui é estimado: tudo sai das marcações dele. */
+function calculaRetrospectiva() {
+  const fui = listaFui().sort(porTempo);
+  const minutos = fui.reduce((a, s) => a + (s.f - s.i), 0);
+
+  const porDia = {};
+  fui.forEach(s => { porDia[s.d] = (porDia[s.d] || 0) + 1; });
+  const diasIdas = Object.keys(porDia).map(Number).sort((a, b) => a - b);
+  const diaCheio = diasIdas.slice().sort((a, b) => porDia[b] - porDia[a])[0];
+
+  const porEspaco = {};
+  fui.forEach(s => { porEspaco[s.l] = (porEspaco[s.l] || 0) + 1; });
+  const espacoTop = Object.keys(porEspaco).map(Number)
+    .sort((a, b) => porEspaco[b] - porEspaco[a])[0];
+  const carimbos = Object.keys(porEspaco).filter(i => +i < D.locais.length - 1).length;
+
+  const porTema = {};
+  fui.forEach(s => (s.tm || []).forEach(t => { porTema[t] = (porTema[t] || 0) + 1; }));
+  const temaTop = Object.keys(porTema).map(Number).sort((a, b) => porTema[b] - porTema[a])[0];
+
+  const pessoas = new Set();
+  fui.forEach(s => (s.p || []).forEach(p => pessoas.add(p[0])));
+
+  const notas = fui.filter(s => marca(s.chave).n);
+  const favoritas = fui.filter(s => marca(s.chave).n === 3);
+  const recados = fui.filter(s => marca(s.chave).c);
+
+  const levei = dados.l.filter(l => l.e === 'levei');
+  const querendo = dados.l.filter(l => l.e !== 'levei');
+  const gasto = levei.reduce((a, l) => a + (+l.p || 0), 0);
+
+  return {
+    fui, minutos, horas: Math.floor(minutos / 60), diasIdas, porDia, diaCheio,
+    espacoTop, porEspaco, carimbos, temaTop, porTema,
+    pessoas: [...pessoas], notas, favoritas, recados,
+    livros: dados.l.length, levei, querendo, gasto,
+    primeira: fui[0], ultima: fui[fui.length - 1],
+    vazio: fui.length === 0 && dados.l.length === 0,
+  };
+}
+/** um apelido para a Bienal dele, tirado do que ele mais fez, não de elogio genérico */
+function apelidoRetro(r) {
+  if (r.temaTop !== undefined && D.temas[r.temaTop] && r.porTema[r.temaTop] >= 2) {
+    return { titulo: 'Sua Bienal foi de ' + D.temas[r.temaTop].nome.toLowerCase(),
+             emoji: D.temas[r.temaTop].emoji };
+  }
+  if (r.carimbos >= 8) return { titulo: 'Você foi um explorador', emoji: '🧭' };
+  if (r.levei.length >= 5) return { titulo: 'Você foi caçador de livros', emoji: '📚' };
+  if (r.fui.length >= 10) return { titulo: 'Você foi maratonista', emoji: '⚡' };
+  if (r.fui.length) return { titulo: 'Sua Bienal, do seu jeito', emoji: '✨' };
+  return { titulo: 'Sua lista de desejos', emoji: '💛' };
+}
+function abreRetro() {
+  const r = calculaRetrospectiva();
+  const ap = apelidoRetro(r);
+  const cartao = (classe, conteudo) => `<div class="retro-cartao ${classe || ''}">${conteudo}</div>`;
+  let html = `<div class="retro-capa">
+      <span class="retro-emoji">${ap.emoji}</span>
+      <h2>${esc(ap.titulo)}</h2>
+      <p>28ª Bienal Internacional do Livro de São Paulo · 4 a 13 de setembro de 2026</p>
+    </div>`;
+
+  if (r.vazio) {
+    html += cartao('', `<p class="retro-texto">Você ainda não marcou nada. Conforme for usando o app,
+      esta página vai se encher sozinha com o que você viu, achou e quis levar.</p>`);
+    $('retro-corpo').innerHTML = html;
+    abreFolha($('folha-retro'));
+    return;
+  }
+
+  if (r.fui.length) {
+    html += cartao('destaque', `
+      <div class="retro-numeros">
+        <div><b>${r.fui.length}</b><span>${r.fui.length === 1 ? 'sessão' : 'sessões'}</span></div>
+        <div><b>${r.horas}h</b><span>de bienal</span></div>
+        <div><b>${r.diasIdas.length}</b><span>${r.diasIdas.length === 1 ? 'dia' : 'dias'}</span></div>
+      </div>`);
+
+    if (r.diaCheio !== undefined) {
+      const d = D.dias[r.diaCheio];
+      html += cartao('', `<span class="retro-rotulo">seu dia mais cheio</span>
+        <h3>${d.semana}, ${d.n} de setembro</h3>
+        <p class="retro-texto">${r.porDia[r.diaCheio]} ${r.porDia[r.diaCheio] === 1 ? 'sessão' : 'sessões'} num dia só.</p>`);
+    }
+
+    if (r.espacoTop !== undefined) {
+      html += cartao('', `<span class="retro-rotulo">onde você mais ficou</span>
+        <div class="retro-espaco" style="--h:${hue(r.espacoTop)}">
+          ${IMG.selos[r.espacoTop] ? `<img src="${IMG.selos[r.espacoTop]}" alt="">` : ''}
+          <div><h3>${esc(D.locais[r.espacoTop])}</h3>
+          <p class="retro-texto">${r.porEspaco[r.espacoTop]} ${r.porEspaco[r.espacoTop] === 1 ? 'vez' : 'vezes'}</p></div>
+        </div>
+        <p class="retro-texto" style="margin-top:12px">Você carimbou ${r.carimbos} de ${D.locais.length - 1} espaços do passaporte.</p>`);
+    }
+
+    if (r.pessoas.length) {
+      const comFoto = r.pessoas.filter(n => IMG.retratos[n]).slice(0, 8);
+      html += cartao('', `<span class="retro-rotulo">quem você foi ver</span>
+        <h3>${r.pessoas.length} ${r.pessoas.length === 1 ? 'pessoa no palco' : 'pessoas no palco'}</h3>
+        ${comFoto.length ? `<div class="retro-caras">${comFoto.map(n => retrato(n)).join('')}</div>` : ''}
+        <p class="retro-texto">${esc(r.pessoas.slice(0, 6).join(', '))}${r.pessoas.length > 6 ? ' e mais ' + (r.pessoas.length - 6) : ''}.</p>`);
+    }
+
+    if (r.favoritas.length) {
+      html += cartao('ouro', `<span class="retro-rotulo">o que você mais gostou</span>
+        ${r.favoritas.slice(0, 3).map(s => `<h3 style="margin-bottom:6px">${esc(s.t)}</h3>
+          <p class="retro-texto" style="margin-bottom:14px">${esc(D.locais[s.l])}${marca(s.chave).c ? ' · "' + esc(marca(s.chave).c) + '"' : ''}</p>`).join('')}`);
+    } else if (r.notas.length) {
+      html += cartao('', `<span class="retro-rotulo">você deu nota</span>
+        <h3>${r.notas.length} ${r.notas.length === 1 ? 'sessão avaliada' : 'sessões avaliadas'}</h3>`);
+    }
+  }
+
+  if (dados.l.length) {
+    html += cartao('ouro', `<span class="retro-rotulo">seus livros</span>
+      <div class="retro-numeros">
+        <div><b>${r.levei.length}</b><span>${r.levei.length === 1 ? 'levado' : 'levados'}</span></div>
+        <div><b>${r.querendo.length}</b><span>na lista</span></div>
+        ${r.gasto ? `<div><b>${reais(r.gasto).replace('R$ ', '')}</b><span>gastos</span></div>` : ''}
+      </div>
+      ${r.levei.length ? `<p class="retro-texto" style="margin-top:14px">${esc(r.levei.slice(0, 5).map(l => l.t).join(', '))}${r.levei.length > 5 ? ' e mais ' + (r.levei.length - 5) : ''}.</p>` : ''}`);
+  }
+
+  html += `<div class="retro-pe">
+      <button class="btn primario" data-copiar-retro>Copiar para mandar</button>
+      <p class="retro-texto" style="margin-top:12px;text-align:center">
+        Ou tire um print desta tela para postar.</p>
+    </div>`;
+
+  $('retro-corpo').innerHTML = html;
+  abreFolha($('folha-retro'));
+}
+async function copiaRetro() {
+  const r = calculaRetrospectiva(), ap = apelidoRetro(r);
+  let t = ap.emoji + ' ' + ap.titulo + '\n';
+  t += 'Bienal do Livro SP 2026\n';
+  if (r.fui.length) {
+    t += `\n${r.fui.length} ${r.fui.length === 1 ? 'sessão' : 'sessões'} · ${r.horas}h de bienal · ${r.diasIdas.length} ${r.diasIdas.length === 1 ? 'dia' : 'dias'}\n`;
+    t += `${r.carimbos} de ${D.locais.length - 1} espaços carimbados\n`;
+    if (r.espacoTop !== undefined) t += `Onde mais fiquei: ${D.locais[r.espacoTop]}\n`;
+    if (r.pessoas.length) t += `${r.pessoas.length} pessoas no palco\n`;
+    if (r.favoritas.length) t += `\nMelhores:\n` + r.favoritas.slice(0, 3).map(s => '  ★ ' + s.t).join('\n') + '\n';
+  }
+  if (dados.l.length) {
+    t += `\nLivros: ${r.levei.length} levados, ${r.querendo.length} na lista`;
+    if (r.gasto) t += `, ${reais(r.gasto)} gastos`;
+    t += '\n';
+    if (r.levei.length) t += r.levei.slice(0, 8).map(l => '  · ' + l.t).join('\n') + '\n';
+  }
+  try { await navigator.clipboard.writeText(t); torrada('Resumo copiado'); }
+  catch (e) { torrada('Não deu para copiar neste navegador'); }
 }
 
 /* ---------- boas-vindas da primeira vez ---------- */
@@ -2034,6 +2262,8 @@ document.addEventListener('click', e => {
     $('bv-avancar').textContent = escolhaBV.length ? `Ver o que separei (${escolhaBV.length})` : 'Pular por enquanto';
     return;
   }
+  if (e.target.closest('[data-abre-retro]')) return abreRetro();
+  if (e.target.closest('[data-copiar-retro]')) return copiaRetro();
   if (e.target.closest('[data-abre-interesses]')) return abreBemVindo(true);
   if (e.target.closest('[data-backup]')) return copiaBackup();
   if (e.target.closest('[data-abre-mapa]')) return abreMapa();
