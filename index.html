@@ -2287,6 +2287,15 @@ if (document.fonts) document.fonts.ready.then(mediaTopo);
 // primeira vez no app: explica em quatro passos e pergunta o que ele curte
 if (!dados.viu) setTimeout(() => abreBemVindo(false), 700);
 
+/* Quando servido por https, guarda o app no aparelho para abrir sem internet mesmo que o
+   cache comum do navegador seja limpo. Aberto como arquivo local ou dentro de um visualizador
+   isso não existe, e nem precisa: ali tudo já está no próprio arquivo. */
+if (location.protocol === 'https:' && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
 setInterval(() => {
   const antes = agora.min;
   atualizaSelo();
