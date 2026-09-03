@@ -1086,6 +1086,9 @@ const semAcento = s => s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLower
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmtReal = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 const reais = v => fmtReal.format(v || 0);
+// só o número, para os placares onde o rótulo já diz que são reais
+const fmtNumero = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const soNumero = v => fmtNumero.format(v || 0);
 
 const HUES = [25, 52, 85, 122, 152, 178, 202, 232, 262, 292, 322, 348, 15];
 const hue = l => HUES[l % HUES.length];
@@ -1860,7 +1863,7 @@ function abreRetro() {
     if (r.favoritas.length) {
       html += cartao('ouro', `<span class="retro-rotulo">o que você mais gostou</span>
         ${r.favoritas.slice(0, 3).map(s => `<h3 style="margin-bottom:6px">${esc(s.t)}</h3>
-          <p class="retro-texto" style="margin-bottom:14px">${esc(D.locais[s.l])}${marca(s.chave).c ? ' · "' + esc(marca(s.chave).c) + '"' : ''}</p>`).join('')}`);
+          <p class="retro-texto" style="margin-bottom:14px">${SEM[D.dias[s.d].semana]} ${D.dias[s.d].n} · ${esc(D.locais[s.l])}${marca(s.chave).c ? ' · "' + esc(marca(s.chave).c) + '"' : ''}</p>`).join('')}`);
     } else if (r.notas.length) {
       html += cartao('', `<span class="retro-rotulo">você deu nota</span>
         <h3>${r.notas.length} ${r.notas.length === 1 ? 'sessão avaliada' : 'sessões avaliadas'}</h3>`);
@@ -1872,7 +1875,7 @@ function abreRetro() {
       <div class="retro-numeros">
         <div><b>${r.levei.length}</b><span>${r.levei.length === 1 ? 'levado' : 'levados'}</span></div>
         <div><b>${r.querendo.length}</b><span>na lista</span></div>
-        ${r.gasto ? `<div><b>${reais(r.gasto).replace('R$ ', '')}</b><span>gastos</span></div>` : ''}
+        ${r.gasto ? `<div><b>${soNumero(r.gasto)}</b><span>reais gastos</span></div>` : ''}
       </div>
       ${r.levei.length ? `<p class="retro-texto" style="margin-top:14px">${esc(r.levei.slice(0, 5).map(l => l.t).join(', '))}${r.levei.length > 5 ? ' e mais ' + (r.levei.length - 5) : ''}.</p>` : ''}`);
   }

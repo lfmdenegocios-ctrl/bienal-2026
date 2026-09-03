@@ -2,7 +2,7 @@
  * Guarda o app inteiro no aparelho na primeira visita, para ele abrir sem internet
  * mesmo que o navegador limpe o cache comum.
  */
-const CACHE = 'bienal26-v2';
+const CACHE = 'bienal26-v3';
 const ARQUIVOS = ['./', './index.html'];
 
 self.addEventListener('install', evento => {
