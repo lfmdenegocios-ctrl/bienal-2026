@@ -640,8 +640,16 @@ img{display:block;max-width:100%}
   width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;
   background:var(--grad);color:#fff;box-shadow:var(--brilho);
 }
-.folha.tela-cheia{max-height:100vh;height:100vh;border-radius:0;border:0}
+/* a tela cheia para acima da barra de abas, para a navegação nunca sumir */
+.folha.tela-cheia{
+  bottom:calc(var(--barra) + var(--base));
+  height:calc(100vh - var(--barra) - var(--base));
+  max-height:none;border-radius:0;border:0;padding-bottom:0;
+}
 .folha.tela-cheia .folha-topo{padding-bottom:0}
+/* com uma tela cheia aberta, a barra fica por cima dela e continua clicável */
+body.tela-cheia-aberta .barra{z-index:62}
+body.tela-cheia-aberta .veu{opacity:0;pointer-events:none}
 .mapa-busca{padding:0 16px 10px;flex:none}
 .mapa-busca .busca input{background:var(--vidro-2)}
 
@@ -1433,12 +1441,15 @@ function abreFolha(f) {
   if (!folhaAberta) ultimoFoco = document.activeElement;
   folhaAberta = f; f.classList.add('on'); veu.classList.add('on');
   document.body.style.overflow = 'hidden';
+  // a tela cheia deixa a barra de abas por cima, para não virar beco sem saída
+  document.body.classList.toggle('tela-cheia-aberta', f.classList.contains('tela-cheia'));
   f.querySelector('.fechar').focus();
 }
 function fechaFolha() {
   if (!folhaAberta) return;
   folhaAberta.classList.remove('on'); veu.classList.remove('on');
   document.body.style.overflow = '';
+  document.body.classList.remove('tela-cheia-aberta');
   folhaAberta = null;
   if (ultimoFoco && ultimoFoco.isConnected) ultimoFoco.focus();
 }
@@ -1973,6 +1984,7 @@ async function copia(qual) {
 /* ---------- abas ---------- */
 const paineis = { agora: elAgora, prog: elProg, diario: elDiario, livros: elLivros, guia: elGuia };
 function trocaAba(nome) {
+  if (folhaAberta) fechaFolha(); // trocar de aba sempre sai de qualquer tela aberta por cima
   st.aba = nome;
   Object.entries(paineis).forEach(([k, el]) => { el.hidden = k !== nome; });
   document.querySelectorAll('.aba').forEach(b => b.setAttribute('aria-selected', b.dataset.aba === nome));
